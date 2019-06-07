@@ -6,24 +6,22 @@
 
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
 
 device = 0
-cam = cv2.VideoCapture(device)
+cap = cv2.VideoCapture(device)
 
-if cam.isOpened() == False:
-    print("Error opening camera")
-    # Release resources, even if it errored out
-    cam.release()
-else:
-	while cam.isOpened():
-		# Capture frame-by-frame
-		ret, frame = cam.read()
-		if ret == False:
-			print("End of video")
-			break;
-		plt.imshow(frame)
-		plt.show()
-	cam.release()
+if (cap.isOpened()== False):
+	print("Error opening camera stream")
+	cap.release()
 
+while(cap.isOpened()):
+	ret, frame = cap.read()
+	if ret == True:
+		cv2.imshow('camera capture', frame)
+		if cv2.waitKey(25) & 0xFF == ord('q'):
+			break
+	else:
+		break
+
+cap.release()
 cv2.destroyAllWindows()
