@@ -6,20 +6,37 @@ import cv2
 
 import argparse
 
-def displayCamera():
-	print ("displayCamera")
+def displayCamera(frame):
+	return frame
 
-def meanShift():
-	print ("meanShift")
+def meanShift(frame):
+	return frame
 
-def watershed():
-	print ("watershed")
+def watershed(frame):
+	return frame
 
-def slic():
-	print ("slic")
+def slic(frame):
+	return frame
 
 def main():
-	args.segmentation()
+	cap = cv2.VideoCapture(0)
+	if (cap.isOpened()== False):
+		print("Error opening camera stream")
+		cap.release()
+		return
+
+	while(cap.isOpened()):
+		ret, frame = cap.read()
+		if ret == True:
+			frame = args.segmentation(frame)
+			cv2.imshow(args.segmentation.__name__,frame)
+			if cv2.waitKey(25) & 0xFF == ord('q'):
+				break
+		else:
+			break
+
+	cap.release()
+	cv2.destroyAllWindows()
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Image level segmentation algorithms. "+
