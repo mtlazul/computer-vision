@@ -1,0 +1,9 @@
+{
+	"quantile" : 0.3,
+	"n_samples" : 50,
+	"random_state" : 0,
+	"bin_seeding" : true,
+	"min_bin_freq" : 1,
+	"cluster_all" : false,
+	"n_jobs" : -1
+}
