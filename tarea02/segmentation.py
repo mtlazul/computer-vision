@@ -3,8 +3,12 @@
 import numpy as np
 import argparse
 import cv2
+from scipy import ndimage as ndi
 from skimage.util import img_as_float
 from skimage.segmentation import slic
+from skimage.filters import rank
+from skimage.segmentation import watershed
+from skimage.morphology import  disk
 import json
 
 import argparse
@@ -15,8 +19,30 @@ def displayCamera(frame):
 def meanShift(frame):
 	return frame
 
-def watershed(frame):
-	return frame
+def watershedSegmentation(frame):
+	pram_file = open("watershed.json")
+	param = json.load(pram_file)
+
+	im = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+	denoised = rank.median(im, disk(2))
+	markers = rank.gradient(denoised, disk(5)) < 10
+	markers = ndi.label(markers)[0]
+	
+	# local gradient (disk(2) is used to keep edges thin)
+	gradient = rank.gradient(denoised, disk(2)) 
+      
+	segments = watershed(gradient,
+					markers = param["markers"],
+					connectivity = param["connectivity"],
+					offset = param["offset"],
+					mask = param["mask"],
+					compactness = param["compactness"],
+					watershed_line = param["watershed_line"])
+	segment_img_gray = np.array(segments, dtype=np.uint8)
+	segment_img_gray = segment_img_gray*(255//np.max(segments))
+	segment_img_color = cv2.applyColorMap(segment_img_gray, cv2.COLORMAP_JET)
+	return segment_img_color
 
 def slicSegmentation(frame):
 	pram_file = open("slic.json")
@@ -64,7 +90,7 @@ if __name__ == "__main__":
 						const=meanShift, default=displayCamera,
 						help='Apply mean shift algorithm to the camera stream')
 	parser.add_argument('--ws', dest='segmentation', action='store_const',
-						const=watershed, default=displayCamera,
+						const=watershedSegmentation, default=displayCamera,
 						help='Apply watershed algorithm to the camera stream')
 	parser.add_argument('--slic', dest='segmentation', action='store_const',
 						const=slicSegmentation, default=displayCamera,
