@@ -5,6 +5,7 @@ import argparse
 import cv2
 from skimage.util import img_as_float
 from skimage.segmentation import slic
+import json
 
 import argparse
 
@@ -18,7 +19,9 @@ def watershed(frame):
 	return frame
 
 def slicSegmentation(frame):
-	segments = slic(frame, n_segments = 20, sigma = 5)
+	pram_file = open("slic.json")
+	param = json.load(pram_file)
+	segments = slic(frame, n_segments = param["n_segments"], sigma = param["sigma"])
 	segment_img_gray = np.array(segments, dtype=np.uint8)
 	segment_img_gray = segment_img_gray*(255//np.max(segments))
 	segment_img_color = cv2.applyColorMap(segment_img_gray, cv2.COLORMAP_JET)
