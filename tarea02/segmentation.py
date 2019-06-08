@@ -21,7 +21,17 @@ def watershed(frame):
 def slicSegmentation(frame):
 	pram_file = open("slic.json")
 	param = json.load(pram_file)
-	segments = slic(frame, n_segments = param["n_segments"], sigma = param["sigma"])
+	segments = slic(frame,
+					n_segments = param["n_segments"],
+					compactness = param["compactness"],
+					max_iter = param["max_iter"],
+					sigma = param["sigma"],
+					multichannel = param["multichannel"],
+					convert2lab = param["convert2lab"],
+					enforce_connectivity = param["enforce_connectivity"],
+					min_size_factor = param["min_size_factor"],
+					max_size_factor = param["max_size_factor"],
+					slic_zero = param["slic_zero"])
 	segment_img_gray = np.array(segments, dtype=np.uint8)
 	segment_img_gray = segment_img_gray*(255//np.max(segments))
 	segment_img_color = cv2.applyColorMap(segment_img_gray, cv2.COLORMAP_JET)
