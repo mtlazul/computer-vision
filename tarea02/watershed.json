@@ -1,0 +1,8 @@
+{
+  "markers" : null,
+  "connectivity" : 1,
+  "offset" : null,
+  "mask" : null,
+  "compactness" : 0,
+  "watershed_line" : false
+}
