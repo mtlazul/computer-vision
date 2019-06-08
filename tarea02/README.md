@@ -8,7 +8,7 @@ En este repositorio se implementa un programa que realiza captura de la cámara 
 Para instalar las dependencias se pueden ejecutar los siguientes comandos:
 
     sudo apt install python3 python3-pip
-    sudo pip3 install opencv-python opencv-contrib-python
+    sudo pip3 install opencv-python opencv-contrib-python scikit-image
 
 ## Uso
 

@@ -1,0 +1,12 @@
+{
+  "n_segments" : 50,
+  "compactness" : 25,
+  "max_iter" : 10,
+  "sigma" : 3,
+  "multichannel" : true,
+  "convert2lab" : true,
+  "enforce_connectivity" : true,
+  "min_size_factor" : 0.3,
+  "max_size_factor" : 3,
+  "slic_zero" : false
+}
