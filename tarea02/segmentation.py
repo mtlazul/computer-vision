@@ -5,15 +5,43 @@ import argparse
 import cv2
 from skimage.util import img_as_float
 from skimage.segmentation import slic
+from sklearn.cluster import MeanShift, estimate_bandwidth
 import json
-
-import argparse
 
 def displayCamera(frame):
 	return frame
 
 def meanShift(frame):
-	return frame
+	# Load params
+	pram_file = open("meanshift.json")
+	param = json.load(pram_file)
+	# Convert capture space color to RGB
+	rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+	frame = np.array(rgb_frame)
+	# Original shape from new RGB frame
+	orig_shape = frame.shape
+	# Convert image into feature array based on RGB intensities
+	flat_frame = np.reshape(frame, [-1, 3])
+	# Mean Shift
+	bandwidth = estimate_bandwidth(flat_frame,
+					quantile = param["quantile"],
+					n_samples = param["n_samples"],
+					random_state = param["random_state"],
+					n_jobs = param["n_jobs"])
+	ms = MeanShift(bandwidth,
+					bin_seeding = param["bin_seeding"],
+					min_bin_freq = param["min_bin_freq"],
+					cluster_all = param["cluster_all"],
+					n_jobs = param["n_jobs"])
+	ms.fit(flat_frame)
+	labels = ms.labels_
+	# Take size and ignore RGB channels
+	segments = np.reshape(labels, orig_shape[:2])
+
+	segment_img_gray = np.array(segments, dtype=np.uint8)
+	segment_img_gray = segment_img_gray*(255//np.max(segments))
+	segment_img_color = cv2.applyColorMap(segment_img_gray, cv2.COLORMAP_JET)
+	return segment_img_color
 
 def watershed(frame):
 	return frame
