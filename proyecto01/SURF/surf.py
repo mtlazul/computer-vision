@@ -7,7 +7,7 @@ import argparse
 from math import sqrt
 
 ## [load]
-parser = argparse.ArgumentParser(description='Code for SIFT local features matching tutorial.')
+parser = argparse.ArgumentParser(description='Code for SURF features matching tutorial.')
 parser.add_argument('--input1', help='Path to input image 1.', default='graf1.png')
 parser.add_argument('--input2', help='Path to input image 2.', default='graf3.png')
 parser.add_argument('--homography', help='Path to the homography matrix.', default='H1to3p.xml')
@@ -23,11 +23,11 @@ fs = cv.FileStorage(cv.samples.findFile(args.homography), cv.FILE_STORAGE_READ)
 homography = fs.getFirstTopLevelNode().mat()
 ## [load]
 
-## [SIFT]
-sift = cv.xfeatures2d.SIFT_create()
-kpts1, desc1 = sift.detectAndCompute(img1, None)
-kpts2, desc2 = sift.detectAndCompute(img2, None)
-## [SIFT]
+## [SURF]
+surf = cv.xfeatures2d.SURF_create()
+kpts1, desc1 = surf.detectAndCompute(img1, None)
+kpts2, desc2 = surf.detectAndCompute(img2, None)
+## [SURF]
 
 ## [2-nn matching]
 matcher = cv.DescriptorMatcher_create(cv.NORM_L1)
@@ -67,10 +67,10 @@ for i, m in enumerate(matched1):
 ## [draw final matches]
 res = np.empty((max(img1.shape[0], img2.shape[0]), img1.shape[1]+img2.shape[1], 3), dtype=np.uint8)
 cv.drawMatches(img1, inliers1, img2, inliers2, good_matches, res)
-cv.imwrite("sift_result.png", res)
+cv.imwrite("surf_result.png", res)
 
 inlier_ratio = len(inliers1) / float(len(matched1))
-print('SIFT Matching Results')
+print('SURF Matching Results')
 print('*******************************')
 print('# Keypoints 1:                        \t', len(kpts1))
 print('# Keypoints 2:                        \t', len(kpts2))
