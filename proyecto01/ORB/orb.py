@@ -24,13 +24,13 @@ homography = fs.getFirstTopLevelNode().mat()
 ## [load]
 
 ## [ORB]
-orb = cv.xfeatures2d.SIFT_create()
+orb = cv.ORB_create()
 kpts1, desc1 = orb.detectAndCompute(img1, None)
 kpts2, desc2 = orb.detectAndCompute(img2, None)
 ## [ORB]
 
 ## [2-nn matching]
-matcher = cv.DescriptorMatcher_create(cv.NORM_L1)
+matcher = cv.DescriptorMatcher_create(cv.DescriptorMatcher_BRUTEFORCE_HAMMING)
 nn_matches = matcher.knnMatch(desc1, desc2, 2)
 ## [2-nn matching]
 
