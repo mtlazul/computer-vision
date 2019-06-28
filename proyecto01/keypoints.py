@@ -6,6 +6,8 @@ from AKAZE import akaze
 from BRISK import brisk
 from KAZE import kaze
 from ORB import orb
+from SIFT import sift
+from SURF import surf
 
 def main():
 	cap = cv.VideoCapture(0)
@@ -19,8 +21,8 @@ def main():
 		prev_frame = frame[:]
 		ret, frame = cap.read()
 		if ret == True:
-			res = orb.ORB(prev_frame, frame)
-			cv.imshow(orb.ORB.__name__, res)
+			res = surf.SURF(prev_frame, frame)
+			cv.imshow(surf.SURF.__name__, res)
 			if cv.waitKey(25) & 0xFF == ord('q'):
 				break
 		else:

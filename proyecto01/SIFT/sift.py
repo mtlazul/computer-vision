@@ -1,11 +1,5 @@
-#! /usr/bin/python
-
-from __future__ import print_function
 import cv2 as cv
 import numpy as np
-import argparse
-from math import sqrt
-
 
 def SIFT(prev_frame, frame):
 	## [load]
@@ -46,30 +40,3 @@ def SIFT(prev_frame, frame):
 
 	return res
 	## [RESULTS]
-
-
-def main():
-	cap = cv.VideoCapture(0)
-	if (cap.isOpened()== False):
-		print("Error opening camera stream")
-		cap.release()
-		return
-
-	ret, frame = cap.read()
-	while(cap.isOpened()):
-		prev_frame = frame[:]
-		ret, frame = cap.read()
-		if ret == True:
-			res = SIFT(prev_frame, frame)
-			cv.imshow(SIFT.__name__, res)
-			if cv.waitKey(25) & 0xFF == ord('q'):
-				break
-		else:
-			break
-
-	cap.release()
-	cv.destroyAllWindows()
-
-
-if __name__ == "__main__":
-	main()
