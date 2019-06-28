@@ -3,6 +3,7 @@ import cv2 as cv
 import numpy as np
 import argparse
 from AKAZE import akaze
+from BRISK import brisk
 
 def main():
 	cap = cv.VideoCapture(0)
@@ -16,8 +17,8 @@ def main():
 		prev_frame = frame[:]
 		ret, frame = cap.read()
 		if ret == True:
-			res = akaze.AKAZE(prev_frame, frame)
-			cv.imshow(akaze.AKAZE.__name__, res)
+			res = brisk.BRISK(prev_frame, frame)
+			cv.imshow(brisk.BRISK.__name__, res)
 			if cv.waitKey(25) & 0xFF == ord('q'):
 				break
 		else:
