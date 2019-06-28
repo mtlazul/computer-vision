@@ -1,11 +1,5 @@
-#! /usr/bin/python
-
-from __future__ import print_function
 import cv2 as cv
 import numpy as np
-import argparse
-from math import sqrt
-
 
 def ORB(prev_frame, frame):
 	## [load]
@@ -15,25 +9,25 @@ def ORB(prev_frame, frame):
 
 	## [ORB]
 	orb = cv.ORB_create()
-        t1d = cv.getTickCount()
+	t1d = cv.getTickCount()
 	kpts0, desc0 = orb.detectAndCompute(gray0, None)
 	kpts1, desc1 = orb.detectAndCompute(gray1, None)
-        t2d = cv.getTickCount()
-        ## [ORB]
+	t2d = cv.getTickCount()
+	## [ORB]
 
-        # time for detection
-        tDetectOrb = 1000 * (t2d -t1d) / cv.getTickFrequency()
+	# time for detection
+	tDetectOrb = 1000 * (t2d -t1d) / cv.getTickFrequency()
 
 	## [Brute-Force matching]
 	# cv.NORM_HAMMING2 should be used for binary string based descriptor, such as ORB
 	matcher = cv.BFMatcher(cv.NORM_HAMMING2, crossCheck=False)
-        t1m = cv.getTickCount()
+	t1m = cv.getTickCount()
 	matches = matcher.knnMatch(desc0, desc1, 2)
-        t2m = cv.getTickCount()
+	t2m = cv.getTickCount()
 
-        # time for matching
-        tMatchOrb = 1000 * (t2m -t1m) / cv.getTickFrequency()
-        ## [Brute-Force matching]
+	# time for matching
+	tMatchOrb = 1000 * (t2m -t1m) / cv.getTickFrequency()
+	## [Brute-Force matching]
 
 	## [ratio test filtering]
 	matched = []
@@ -54,35 +48,8 @@ def ORB(prev_frame, frame):
 	print('# Keypoints 1:                        \t', len(kpts0))
 	print('# Keypoints 2:                        \t', len(kpts1))
 	print('# Matches:                            \t', len(matched))
-        print('# Detection Time (ms):                \t', tDetectOrb)
-        print('# Matching Time (ms):                 \t', tMatchOrb)
+	print('# Detection Time (ms):                \t', tDetectOrb)
+	print('# Matching Time (ms):                 \t', tMatchOrb)
 
 	return res
 	## [RESULTS]
-
-
-def main():
-	cap = cv.VideoCapture(0)
-	if (cap.isOpened()== False):
-		print("Error opening camera stream")
-		cap.release()
-		return
-
-	ret, frame = cap.read()
-	while(cap.isOpened()):
-		prev_frame = frame[:]
-		ret, frame = cap.read()
-		if ret == True:
-			res = ORB(prev_frame, frame)
-			cv.imshow(ORB.__name__, res)
-			if cv.waitKey(25) & 0xFF == ord('q'):
-				break
-		else:
-			break
-
-	cap.release()
-	cv.destroyAllWindows()
-
-
-if __name__ == "__main__":
-	main()

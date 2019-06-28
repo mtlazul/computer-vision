@@ -5,6 +5,7 @@ import argparse
 from AKAZE import akaze
 from BRISK import brisk
 from KAZE import kaze
+from ORB import orb
 
 def main():
 	cap = cv.VideoCapture(0)
@@ -18,8 +19,8 @@ def main():
 		prev_frame = frame[:]
 		ret, frame = cap.read()
 		if ret == True:
-			res = kaze.KAZE(prev_frame, frame)
-			cv.imshow(kaze.KAZE.__name__, res)
+			res = orb.ORB(prev_frame, frame)
+			cv.imshow(orb.ORB.__name__, res)
 			if cv.waitKey(25) & 0xFF == ord('q'):
 				break
 		else:
