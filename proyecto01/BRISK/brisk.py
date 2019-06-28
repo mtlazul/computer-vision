@@ -10,13 +10,23 @@ def BRISK(prev_frame, frame):
 
 	## [BRISK]
 	brisk = cv.BRISK_create()
+	t1d = cv.getTickCount()
 	kpts0, desc0 = brisk.detectAndCompute(gray0, None)
 	kpts1, desc1 = brisk.detectAndCompute(gray1, None)
+	t2d = cv.getTickCount()
+
+	# time for detection
+	tDetectBrisk = 1000 * (t2d - t1d) / cv.getTickFrequency()
 	## [BRISK]
 
 	## [Brute-Force matching]
 	matcher = cv.BFMatcher(cv.NORM_HAMMING, crossCheck=False)
+	t1m = cv.getTickCount()
 	matches = matcher.knnMatch(desc0, desc1, 2)
+	t2m = cv.getTickCount()
+
+	# time for matching
+	tMatchBrisk = 1000 * (t2m - t1m) / cv.getTickFrequency()
 	## [Brute-Force matching]
 
 	## [ratio test filtering]
@@ -35,9 +45,11 @@ def BRISK(prev_frame, frame):
 	## [RESULTS]
 	print('\nBRISK Matching Results')
 	print('*******************************')
-	print('# Keypoints 1:                        \t', len(kpts0))
-	print('# Keypoints 2:                        \t', len(kpts1))
-	print('# Matches:                            \t', len(matched))
+	print('# Keypoints 1:                                        \t', len(kpts0))
+	print('# Keypoints 2:                                        \t', len(kpts1))
+	print('# Matches:                                            \t', len(matched))
+	print('# Detection and Description Time (ms):                \t', tDetectBrisk)
+	print('# Matching Time (ms):                                 \t', tMatchBrisk)
 
 	return res
 	## [RESULTS]
