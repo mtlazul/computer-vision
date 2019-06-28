@@ -11,8 +11,6 @@ def SIFT(prev_frame, frame):
 	## [load]
 	gray0 = cv.cvtColor(prev_frame, cv.COLOR_BGR2GRAY)
 	gray1 = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-	fs = cv.FileStorage(cv.samples.findFile(args.homography), cv.FILE_STORAGE_READ)
-	homography = fs.getFirstTopLevelNode().mat()
 	## [load]
 
 	## [SIFT]
@@ -74,9 +72,4 @@ def main():
 
 
 if __name__ == "__main__":
-	parser = argparse.ArgumentParser(description='Code for SIFT local features matching tutorial.')
-	parser.add_argument('--input1', help='Path to input image 1.', default='graf1.png')
-	parser.add_argument('--input2', help='Path to input image 2.', default='graf3.png')
-	parser.add_argument('--homography', help='Path to the homography matrix.', default='H1to3p.xml')
-	args = parser.parse_args()
 	main()
