@@ -15,15 +15,25 @@ def ORB(prev_frame, frame):
 
 	## [ORB]
 	orb = cv.ORB_create()
+        t1d = cv.getTickCount()
 	kpts0, desc0 = orb.detectAndCompute(gray0, None)
 	kpts1, desc1 = orb.detectAndCompute(gray1, None)
-	## [ORB]
+        t2d = cv.getTickCount()
+        ## [ORB]
+
+        # time for detection
+        tDetectOrb = 1000 * (t2d -t1d) / cv.getTickFrequency()
 
 	## [Brute-Force matching]
 	# cv.NORM_HAMMING2 should be used for binary string based descriptor, such as ORB
 	matcher = cv.BFMatcher(cv.NORM_HAMMING2, crossCheck=False)
+        t1m = cv.getTickCount()
 	matches = matcher.knnMatch(desc0, desc1, 2)
-	## [Brute-Force matching]
+        t2m = cv.getTickCount()
+
+        # time for matching
+        tMatchOrb = 1000 * (t2m -t1m) / cv.getTickFrequency()
+        ## [Brute-Force matching]
 
 	## [ratio test filtering]
 	matched = []
@@ -44,6 +54,8 @@ def ORB(prev_frame, frame):
 	print('# Keypoints 1:                        \t', len(kpts0))
 	print('# Keypoints 2:                        \t', len(kpts1))
 	print('# Matches:                            \t', len(matched))
+        print('# Detection Time (ms):                \t', tDetectOrb)
+        print('# Matching Time (ms):                 \t', tMatchOrb)
 
 	return res
 	## [RESULTS]
