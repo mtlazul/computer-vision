@@ -9,13 +9,23 @@ def SURF(prev_frame, frame):
 
 	## [SURF]
 	surf = cv.xfeatures2d.SURF_create()
+	t1d = cv.getTickCount()
 	kpts0, desc0 = surf.detectAndCompute(gray0, None)
 	kpts1, desc1 = surf.detectAndCompute(gray1, None)
+	t2d = cv.getTickCount()
+
+	# time for detection
+	tDetectSurf = 1000 * (t2d - t1d) / cv.getTickFrequency()
 	## [SURF]
 
 	## [Brute-Force matching]
 	matcher = cv.BFMatcher(cv.NORM_L2, crossCheck=False)
+	t1m = cv.getTickCount()
 	matches = matcher.knnMatch(desc0, desc1, 2)
+	t2m = cv.getTickCount()
+
+	# time for matching
+	tMatchSurf = 1000 * (t2m - t1m) / cv.getTickFrequency()
 	## [Brute-Force matching]
 
 	## [ratio test filtering]
@@ -34,9 +44,11 @@ def SURF(prev_frame, frame):
 	## [RESULTS]
 	print('\nSURF Matching Results')
 	print('*******************************')
-	print('# Keypoints 1:                        \t', len(kpts0))
-	print('# Keypoints 2:                        \t', len(kpts1))
-	print('# Matches:                            \t', len(matched))
+	print('# Keypoints 1:                                        \t', len(kpts0))
+	print('# Keypoints 2:                                        \t', len(kpts1))
+	print('# Matches:                                            \t', len(matched))
+	print('# Detection and Description Time (ms):                \t', tDetectSurf)
+	print('# Matching Time (ms):                                  \t', tMatchSurf)
 
 	return res
 	## [RESULTS]
