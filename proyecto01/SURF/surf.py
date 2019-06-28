@@ -20,7 +20,7 @@ def SURF(prev_frame, frame):
 	## [SURF]
 
 	## [Brute-Force matching]
-	matcher = cv.BFMatcher()
+	matcher = cv.BFMatcher(cv.NORM_L2, crossCheck=False)
 	matches = matcher.knnMatch(desc0, desc1, 2)
 	## [Brute-Force matching]
 
