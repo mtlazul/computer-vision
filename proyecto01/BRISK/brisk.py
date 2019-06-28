@@ -20,16 +20,21 @@ def BRISK(prev_frame, frame):
 	## [BRISK]
 
 	## [Brute-Force matching]
-	# cv.NORM_HAMMING should be used for binary string based descriptor (e.g. ORB, BRISK)
-	# crossCheck ON for better results
-	matcher = cv.BFMatcher(cv.NORM_HAMMING, crossCheck=True)
-	matches = matcher.match(desc0, desc1)
-	matches = sorted(matches, key = lambda x:x.distance) # Sort them in the order of their distance
+	matcher = cv.BFMatcher(cv.NORM_HAMMING, crossCheck=False)
+	matches = matcher.knnMatch(desc0, desc1, 2)
 	## [Brute-Force matching]
+
+	## [ratio test filtering]
+	matched = []
+	match_ratio = 0.75
+	for m,n in matches:
+		if m.distance < match_ratio * n.distance:
+			matched.append(m)
+	## [ratio test filtering]
 
 	## [draw final matches]
 	res = np.empty((max(gray0.shape[0], gray1.shape[0]), gray0.shape[1]+gray1.shape[1], 3), dtype=np.uint8)
-	cv.drawMatches(gray0, kpts0, gray1, kpts1, matches, res, flags=cv.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS)
+	cv.drawMatches(gray0, kpts0, gray1, kpts1, matched, res, flags=cv.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS)
 	## [draw final matches]
 
 	## [RESULTS]
@@ -37,7 +42,7 @@ def BRISK(prev_frame, frame):
 	print('*******************************')
 	print('# Keypoints 1:                        \t', len(kpts0))
 	print('# Keypoints 2:                        \t', len(kpts1))
-	print('# Matches:                            \t', len(matches))
+	print('# Matches:                            \t', len(matched))
 
 	return res
 	## [RESULTS]
