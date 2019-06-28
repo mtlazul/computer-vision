@@ -20,7 +20,7 @@ def SIFT(prev_frame, frame):
 	## [SIFT]
 
 	## [Brute-Force matching]
-	matcher = cv.BFMatcher()
+	matcher = cv.BFMatcher(cv.NORM_L2, crossCheck=False)
 	matches = matcher.knnMatch(desc0, desc1, 2)
 	## [Brute-Force matching]
 
