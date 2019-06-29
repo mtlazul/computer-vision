@@ -9,13 +9,23 @@ def AKAZE(prev_frame, frame):
 
 	## [A-KAZE]
 	akaze = cv.AKAZE_create()
+	t1d = cv.getTickCount()
 	kpts0, desc0 = akaze.detectAndCompute(gray0, None)
 	kpts1, desc1 = akaze.detectAndCompute(gray1, None)
+	t2d = cv.getTickCount()
+
+	# time for detection
+	tDetectAkaze = 1000 * (t2d - t1d) / cv.getTickFrequency()
 	## [A-KAZE]
 
 	## [Brute-Force matching]
 	matcher = cv.BFMatcher(cv.NORM_L2, crossCheck=False)
+	t1m = cv.getTickCount()
 	matches = matcher.knnMatch(desc0, desc1, 2)
+	t2m = cv.getTickCount()
+
+	# time for matching
+	tMatchAkaze = 1000 * (t2m - t1m) / cv.getTickFrequency()
 	## [Brute-Force matching]
 
 	## [ratio test filtering]
@@ -37,6 +47,8 @@ def AKAZE(prev_frame, frame):
 	print('# Keypoints 1:                        \t', len(kpts0))
 	print('# Keypoints 2:                        \t', len(kpts1))
 	print('# Matches:                            \t', len(matched))
+	print('# Detection Time (ms):                \t', tDetectAkaze)
+	print('# Matching Time (ms):                 \t', tMatchAkaze)
 
 	return res
 	## [RESULTS]
